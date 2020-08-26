@@ -1,0 +1,77 @@
+scilla_version 0
+
+import BoolUtils ListUtils
+
+library RatingsFed
+
+let removeSpecific = 
+  fun (addrToRemove : ByStr20) =>
+  fun (fedAddress : ByStr20) =>
+    let equal = builtin eq addrToRemove fedAddress in
+    negb equal
+    
+let not_owner_code = Int32 1
+
+contract RatingsFed (owner : ByStr20)
+
+(* 
+-----Ratings-----
+1 - g : suitable for display on all websites with any audience type.
+2 - pg : may contain rude gestures, provocatively dressed individuals, the lesser swear
+words, or mild violence.
+3 - r : may contain such things as harsh profanity, intense violence, nudity, or hard drug
+use.
+4 - x : may contain hardcore sexual imagery or extremely disturbing violence.
+*)
+
+(* Map IPFS_hash Rating *)
+(* Ratings as int to allow for negative ratings to denote other meanings*)
+field ratings : Map String Int32 = Emp String Int32
+
+(* List of other trusted contract addresses *)
+field federation : List ByStr20 = Nil {ByStr20}
+
+transition AddRating(ipfsHash : String, rating : Int32)
+  isOwner = builtin eq owner _sender;
+  match isOwner with 
+  | True =>
+    ratings[ipfsHash] := rating;
+    e = {_eventname : "AddRating success"; ipfsHash : ipfsHash; rating : rating};
+    event e
+  | False =>
+    e = {_eventname : "AddRating failure"; errcode : not_owner_code};
+    event e
+  end
+end
+
+transition AddToFed(newAddr : ByStr20)
+  isOwner = builtin eq owner _sender;
+  match isOwner with 
+  | True =>
+    currentFed <- federation;
+    newFedList = Cons {ByStr20} newAddr currentFed;
+    federation := newFedList;
+    e = {_eventname : "AddToFed success"; newAddr : newAddr};
+    event e
+  | False =>
+    e = {_eventname : "AddToFed failure"; errcode : not_owner_code};
+    event e
+  end
+end
+
+transition RemoveFromFed(removeAddr : ByStr20)
+  isOwner = builtin eq owner _sender;
+  match isOwner with 
+  | True =>
+    currentFed <- federation;
+    filterByStr20 = @list_filter ByStr20;
+    removeCompare = removeSpecific removeAddr;
+    newFed = filterByStr20 removeCompare currentFed;
+    federation := newFed;
+    e = {_eventname : "RemoveFromFed success"; removeAddr : removeAddr};
+    event e
+  | False =>
+    e = {_eventname : "RemoveFromFed failure"; errcode : not_owner_code};
+    event e
+  end
+end

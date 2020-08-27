@@ -5,12 +5,12 @@
 git clone git@github.com:iangohy/zilliqa-review-federation-poc.git
 cd zilliqa-review-federation-poc
 yarn install
-yarn run start
+yarn start
 ```
 
 To listen on other ports
 ```
-PORT=8888 yarn run start
+PORT=8888 yarn start
 ```
 
 ## Usage
@@ -26,40 +26,45 @@ Example: http://localhost:3000/getRating/0x6e3d093864Ee51C691d68447Afe9fdC38c025
 ### Deploy Smart Contract
 Deploy a new review smart contract. Owner immutable field will be set to the public key of the wallet deploying the contract.
 ```
-PRIVATE_KEY=xxxx yarn run deploy
+PRIVATE_KEY=xxxx yarn deploy
 ```
 Example: 
 ```
-yarn run deploy
+yarn deploy
 ```
 ### Add Rating
 Add specified rating given the IPFS hash of a file.
 ```
-PRIVATE_KEY=xxxx CONTRACT_ADDRESS=xxxx IPFS_HASH=Qxxxx RATING=x yarn run addRating
+PRIVATE_KEY=xxxx CONTRACT_ADDRESS=xxxx IPFS_HASH=Qxxxx RATING=x yarn addRating
 ```
 Example: 
 ```
-IPFS_HASH=Qmd286K6pohQcTKYqnS1YhWrCiS4gz7Xi34sdwMe9USZ7u RATING=1 yarn run addRating
+IPFS_HASH=Qmd286K6pohQcTKYqnS1YhWrCiS4gz7Xi34sdwMe9USZ7u RATING=1 yarn addRating
 ```
 
 ### Add to Federation
 Add another review smart contract to the federation. Rating from all other contracts in the federation will be returned when getRating is called.
 ```
-PRIVATE_KEY=xxxx CONTRACT_ADDRESS=xxxx ADD_CONTRACT_ADDRESS=xxxx yarn run addFed
+PRIVATE_KEY=xxxx CONTRACT_ADDRESS=xxxx ADD_CONTRACT_ADDRESS=xxxx yarn addFed
 ```
 Example:
 ```
-ADD_CONTRACT_ADDRESS=0x5a53a64d5076b36845b7a97354e346051fc74d96 yarn run addFed
+ADD_CONTRACT_ADDRESS=0x5a53a64d5076b36845b7a97354e346051fc74d96 yarn addFed
 ```
 
 ### Remove from Federation
 Remove existing review smart contract from the federation.
 ```
-PRIVATE_KEY=xxxx CONTRACT_ADDRESS=xxxx RM_CONTRACT_ADDRESS=xxxx yarn run rmFed
+PRIVATE_KEY=xxxx CONTRACT_ADDRESS=xxxx RM_CONTRACT_ADDRESS=xxxx yarn rmFed
 ```
 Example:
 ```
-RM_CONTRACT_ADDRESS=0x5a53a64d5076b36845b7a97354e346051fc74d96 yarn run rmFed
+RM_CONTRACT_ADDRESS=0x5a53a64d5076b36845b7a97354e346051fc74d96 yarn rmFed
+```
+
+## Run Development Server
+```
+yarn dev
 ```
 
 ## Testing Data

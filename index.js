@@ -9,6 +9,7 @@ const PORT = process.env.PORT || 3000;
 app.get('/getRating/:mainContractAddress/:ipfsHash', async (req, res) => {
     let mainContractAddress = req.params.mainContractAddress;
     let ipfsHash = req.params.ipfsHash;
+    console.log(`Request:\n\tMain Contract Address: ${mainContractAddress}\n\tIPFS Hash: ${ipfsHash}`)
 
     /* Helper function to get rating from particular contract on blockchain 
     Arguments:
@@ -25,11 +26,11 @@ app.get('/getRating/:mainContractAddress/:ipfsHash', async (req, res) => {
             ratingData = await contract.getSubState('ratings', [
                 `${ipfsHash}`,
             ]);
-            console.log(`
-    IPFS Hash: ${ipfsHash}
-    Contract Address: ${contractAddress}
-    Data from blockchain: ${JSON.stringify(ratingData)}
-            `);
+    //         console.log(`
+    // IPFS Hash: ${ipfsHash}
+    // Contract Address: ${contractAddress}
+    // Data from blockchain: ${JSON.stringify(ratingData)}
+    //         `);
         }
         catch (err) {
             console.log("Error reading state from blockchain!");
@@ -51,10 +52,10 @@ app.get('/getRating/:mainContractAddress/:ipfsHash', async (req, res) => {
     try {
         const contract = zilliqa.contracts.at(`${mainContractAddress}`);
         const federationData = await contract.getSubState('federation');
-        console.log(`
-    Contract Address: ${mainContractAddress}
-    Data from blockchain: ${JSON.stringify(federationData)}
-            `);
+    //     console.log(`
+    // Contract Address: ${mainContractAddress}
+    // Data from blockchain: ${JSON.stringify(federationData)}
+    //         `);
 
         if (federationData == null) {
             console.log("Error! Possibly invalid contract address or not review smart contract")
@@ -65,14 +66,15 @@ app.get('/getRating/:mainContractAddress/:ipfsHash', async (req, res) => {
         (async function() {
             allRatings = await Promise.all(ratingsArray.map((contractAddress) => getRatingFromContract(contractAddress, ipfsHash)));
             console.log("Response: ")
-            console.log({"ipfsHash": ipfsHash, "ratings" : allRatings});
-            res.json({"ipfsHash": ipfsHash, "ratings" : allRatings});
+            res_json = {"ipfsHash": ipfsHash, "ratings" : allRatings};
+            console.log(res_json);
+            res.json(res_json);
         })();
     }
     catch (err) {
         console.log("Error getting ratings data");
         console.log(err);
-        return res.sendStatus(500);
+        return res.sendStatus(400);
     }
 })
 

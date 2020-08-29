@@ -13,6 +13,8 @@ To listen on other ports
 PORT=8888 yarn start
 ```
 
+## Overview
+![Overview Diagram](./overview.svg)
 ## Usage
 ### Recommendations
 Add `PRIVATE_KEY` and `CONTRACT_ADDRESS` to .env file at the root of the project folder. Additional required environmental variables can be prepended to the desired commands. Examples shown assume that `PRIVATE_KEY` and `CONTRACT_ADDRESS` have been added to .env file or already exists as an environment variable.

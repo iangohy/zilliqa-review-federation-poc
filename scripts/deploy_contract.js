@@ -111,13 +111,13 @@ const myGasPrice = units.toQa('1000', units.Units.Li);
 
 
   console.log(`Deploy transaction using ${zilliqa.wallet.defaultAccount.bech32Address}...`);
-  // const [txn] = await contract.deploy(
-  //     {
-  //         version: VERSION,
-  //         gasPrice: myGasPrice,
-  //         gasLimit: Long.fromNumber(10000),
-  //     },
-  // );
+  const [txn] = await contract.deploy(
+      {
+          version: VERSION,
+          gasPrice: myGasPrice,
+          gasLimit: Long.fromNumber(10000),
+      },
+  );
 
   // console.log(txn)
 
